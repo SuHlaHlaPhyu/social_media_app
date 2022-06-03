@@ -46,8 +46,11 @@ class NewsFeedItemView extends StatelessWidget {
         const SizedBox(
           height: MARGIN_MEDIUM_2,
         ),
-        PostImageView(
-          image: newsFeed?.postImage ?? "",
+        Visibility(
+          visible: ((newsFeed?.postImage ?? "").isNotEmpty),
+          child: PostImageView(
+            image: newsFeed?.postImage ?? "",
+          ),
         ),
         const SizedBox(
           height: MARGIN_MEDIUM_2,

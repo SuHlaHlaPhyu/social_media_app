@@ -1,5 +1,6 @@
 import 'package:social_media_app/data/models/social_model.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
+import 'package:social_media_app/network/firestore_database_data_agent_impl.dart';
 import 'package:social_media_app/network/real_time_database_data_agent_impl.dart';
 import 'package:social_media_app/network/social_data_agent.dart';
 
@@ -12,7 +13,11 @@ class SocialModelImpl extends SocialModel {
     return _singleton;
   }
 
-  SocialDataAgent dataAgent = RealTimeDatabaseDataAgentImpl();
+  /// real time database
+  //SocialDataAgent dataAgent = RealTimeDatabaseDataAgentImpl();
+
+  /// fire store database
+  SocialDataAgent dataAgent = FireStoreDatabaseDataAgentImpl();
   @override
   Stream<List<NewsFeedVO>> getNewsFeed() {
     return dataAgent.getNewsFeed();
@@ -25,7 +30,7 @@ class SocialModelImpl extends SocialModel {
         id: currentTime,
         description: description,
         userName: "Su Hla Hla Phyu",
-        postImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&w=1080&fit=max&q=80&fm=jpg&crop=entropy&cs=tinysrgb",
+        postImage: "",
         profilePicture: "https://wallpaperaccess.com/full/3256855.jpg");
     return dataAgent.addNewPost(newPost);
   }

@@ -19,7 +19,7 @@ class RealTimeDatabaseDataAgentImpl extends SocialDataAgent {
 
   @override
   Stream<List<NewsFeedVO>> getNewsFeed() {
-    // onValue => real time wait => return Stream => every time emit
+    // onValue => real time notify => return Stream => every time emit
     return databaseRef.child(newsFeedPath).onValue.map((event) {
       // event.snapshot.value => List<Object> => Map<String, dynamic> => VO // with simple key eg.1,2,3,4
       //  return event.snapshot.value.map<NewsFeedVO>((element) {
