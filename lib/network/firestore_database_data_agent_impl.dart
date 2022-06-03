@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
 import 'package:social_media_app/network/social_data_agent.dart';
 
 const newsFeedCollection = "newsfeed";
+const fileUploadRef = "uploads";
 
 class FireStoreDatabaseDataAgentImpl extends SocialDataAgent {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
+
+  var firebaseStorage = FirebaseStorage.instance;
   @override
   Future<void> addNewPost(NewsFeedVO post) {
     return fireStore
@@ -49,5 +55,14 @@ class FireStoreDatabaseDataAgentImpl extends SocialDataAgent {
       return NewsFeedVO.fromJson(
           Map<String, dynamic>.from(documentSnapshot.data()!));
     });
+  }
+
+  @override
+  Future<String> uploadFileToFirebase(File image) {
+    return FirebaseStorage.instance
+        .ref(fileUploadRef)
+        .child("${DateTime.now().millisecondsSinceEpoch}")
+        .putFile(image)
+        .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
   }
 }

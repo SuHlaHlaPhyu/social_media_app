@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:social_media_app/data/models/social_model.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
 import 'package:social_media_app/network/firestore_database_data_agent_impl.dart';
@@ -24,15 +26,31 @@ class SocialModelImpl extends SocialModel {
   }
 
   @override
-  Future<void> addNewPost(String description) {
-    var currentTime = DateTime.now().millisecondsSinceEpoch;
+  Future<void> addNewPost(String description, File? imageFile) {
+    if (imageFile != null) {
+      print("======> with image");
+      return dataAgent
+          .uploadFileToFirebase(imageFile)
+          .then((downloadUrl) => craftNewsFeedVO(description, downloadUrl))
+          .then((newPost) => dataAgent.addNewPost(newPost),);
+    } else {
+      return craftNewsFeedVO(description, "")
+          .then((newPost) => dataAgent.addNewPost(newPost),);
+    }
+  }
+
+  Future<NewsFeedVO> craftNewsFeedVO(String description, String imageUrl) {
+    var currentMilliseconds = DateTime.now().millisecondsSinceEpoch;
     var newPost = NewsFeedVO(
-        id: currentTime,
-        description: description,
-        userName: "Su Hla Hla Phyu",
-        postImage: "",
-        profilePicture: "https://wallpaperaccess.com/full/3256855.jpg");
-    return dataAgent.addNewPost(newPost);
+      id: currentMilliseconds,
+      userName: "Su Hla Hla Phyu",
+      postImage: imageUrl,
+      description: description,
+      profilePicture:
+          "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+    );
+    print("=======> prepare craft newsfeed");
+    return Future.value(newPost);
   }
 
   @override

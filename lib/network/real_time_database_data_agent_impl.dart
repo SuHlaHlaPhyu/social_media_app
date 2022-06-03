@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
 import 'package:social_media_app/network/social_data_agent.dart';
 
 const newsFeedPath = "newsfeed";
+
+const fileUploadRef = "uploads";
 
 class RealTimeDatabaseDataAgentImpl extends SocialDataAgent {
   static final RealTimeDatabaseDataAgentImpl _singleton =
@@ -16,6 +21,9 @@ class RealTimeDatabaseDataAgentImpl extends SocialDataAgent {
 
   /// Database ref
   var databaseRef = FirebaseDatabase.instance.reference();
+
+  ///
+  var firebaseStorage = FirebaseStorage.instance;
 
   @override
   Stream<List<NewsFeedVO>> getNewsFeed() {
@@ -58,5 +66,15 @@ class RealTimeDatabaseDataAgentImpl extends SocialDataAgent {
         .map((event) {
       return NewsFeedVO.fromJson(Map<String, dynamic>.from(event.value));
     });
+  }
+
+  @override
+  Future<String> uploadFileToFirebase(File image) {
+    print("=======> upload file to firebase");
+    return firebaseStorage
+        .ref(fileUploadRef)
+        .child("${DateTime.now().millisecondsSinceEpoch}")
+        .putFile(image)
+        .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
   }
 }

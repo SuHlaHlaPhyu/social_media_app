@@ -43,5 +43,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Social app need to access your camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Social app need to access your photo gallery</string>
 </dict>
 </plist>
