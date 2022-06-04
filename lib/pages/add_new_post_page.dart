@@ -143,34 +143,38 @@ class PostImageView extends StatelessWidget {
             Container(
               child: (bloc.chosenImageFile == null)
                   ? GestureDetector(
-                child: SizedBox(
-                  height: 300,
-                  child: Image.network(
-                    "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640",
-                  ),
-                ),
-                onTap: () async {
-                  final ImagePicker _picker = ImagePicker();
-                  // Pick an image
-                  final XFile? image = await _picker.pickImage(
-                      source: ImageSource.gallery);
-                  if (image != null) {
-                    bloc.onImageChosen(File(image.path));
-                  }
-                },
-              )
+                      child: SizedBox(
+                        height: 300,
+                        child: bloc.isRemove && bloc.postedImage != ""
+                            ? Image.network(
+                              bloc.postedImage,
+                            )
+                            : Image.network(
+                              "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png?w=640",
+                            ),
+                      ),
+                      onTap: () async {
+                        final ImagePicker _picker = ImagePicker();
+                        // Pick an image
+                        final XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery);
+                        if (image != null) {
+                          bloc.onImageChosen(File(image.path));
+                        }
+                      },
+                    )
                   : SizedBox(
-                height: 300,
-                child: Image.file(
-                  bloc.chosenImageFile ?? File(""),
-                  fit: BoxFit.cover,
-                ),
-              ),
+                      height: 300,
+                      child: Image.file(
+                        bloc.chosenImageFile ?? File(""),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
             ),
             Align(
               alignment: Alignment.topRight,
               child: Visibility(
-                visible: bloc.chosenImageFile != null,
+                visible: bloc.chosenImageFile != null || (bloc.isRemove && bloc.postedImage != ""),
                 child: GestureDetector(
                   onTap: () {
                     bloc.onTapDeleteImage();
@@ -207,15 +211,18 @@ class PostButtonView extends StatelessWidget {
           width: double.infinity,
           height: MARGIN_XXLARGE,
           decoration: BoxDecoration(
-            color:  Colors.black,
+            color: Colors.black,
             borderRadius: BorderRadius.circular(MARGIN_LARGE),
           ),
           child: const Center(
-            child: Text("POST",style: TextStyle(
-              color: Colors.white,
-              fontSize: TEXT_REGULAR_2X,
-              fontWeight: FontWeight.bold,
-            ),),
+            child: Text(
+              "POST",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: TEXT_REGULAR_2X,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
@@ -237,8 +244,8 @@ class ProfileImageAndNameView extends StatelessWidget {
           const SizedBox(
             width: MARGIN_MEDIUM_2,
           ),
-         Text(
-           bloc.userName,
+          Text(
+            bloc.userName,
             style: const TextStyle(
               fontSize: TEXT_REGULAR_2X,
               color: Colors.black,

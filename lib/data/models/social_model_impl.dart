@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:social_media_app/data/models/social_model.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
 import 'package:social_media_app/network/firestore_database_data_agent_impl.dart';
@@ -53,6 +54,11 @@ class SocialModelImpl extends SocialModel {
     return Future.value(newPost);
   }
 
+  Future<NewsFeedVO> craftNewsFeedVOForEdit (NewsFeedVO newsFeed, String imageUrl){
+    newsFeed.postImage = imageUrl;
+    return Future.value(newsFeed);
+  }
+
   @override
   Future<void> deletePost(int postId) {
     return dataAgent.deletePost(postId);
@@ -64,7 +70,11 @@ class SocialModelImpl extends SocialModel {
   }
 
   @override
-  Future<void> editPost(NewsFeedVO newsFeed) {
-    return dataAgent.addNewPost(newsFeed);
+  Future<void> editPost(NewsFeedVO newsFeed,File? image) {
+    if(image != null){
+      return dataAgent.uploadFileToFirebase(image).then((downloadUrl) => craftNewsFeedVOForEdit(newsFeed, downloadUrl)).then((value) => dataAgent.addNewPost(value));
+    } else {
+      return dataAgent.addNewPost(newsFeed);
+    }
   }
 }

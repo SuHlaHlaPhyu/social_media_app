@@ -11,11 +11,13 @@ class AddNewPostBloc extends ChangeNotifier {
   bool isAddNewPostError = false;
   bool isDisposed = false;
   bool isLoading = false;
+  bool isRemove = false;
 
   /// Edit post
   bool isEditMode = false;
   String userName = "";
   String profilePicture = "";
+  String postedImage  ="";
   NewsFeedVO? newsFeed;
 
   File? chosenImageFile;
@@ -25,6 +27,7 @@ class AddNewPostBloc extends ChangeNotifier {
   AddNewPostBloc({int? newsFeedId}) {
     if (newsFeedId != null) {
       isEditMode = true;
+      isRemove = true;
       prepareDataForEditMode(newsFeedId);
     } else {
       prepareDataForNewPostMode();
@@ -43,6 +46,7 @@ class AddNewPostBloc extends ChangeNotifier {
       userName = newsFeedItem.userName ?? "";
       profilePicture = newsFeedItem.profilePicture ?? "";
       newPostDescription = newsFeedItem.description ?? "";
+        postedImage = newsFeedItem.postImage ?? "";
       newsFeed = newsFeedItem;
       _notifySafely();
     });
@@ -55,6 +59,7 @@ class AddNewPostBloc extends ChangeNotifier {
 
   void onTapDeleteImage() {
     chosenImageFile = null;
+    isRemove = false;
     _notifySafely();
   }
 
@@ -89,7 +94,7 @@ class AddNewPostBloc extends ChangeNotifier {
   Future<dynamic> editNewsFeedPost() {
     newsFeed?.description = newPostDescription;
     if (newsFeed != null) {
-      return _model.editPost(newsFeed!);
+      return _model.editPost(newsFeed!, chosenImageFile);
     } else {
       return Future.error("Error");
     }
