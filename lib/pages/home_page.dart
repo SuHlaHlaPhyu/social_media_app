@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/blocs/news_feed_bloc.dart';
 import 'package:social_media_app/resources/dimens.dart';
+import 'package:social_media_app/utils/extensions.dart';
 import 'package:social_media_app/viewitems/news_feed_item_view.dart';
 
 import 'add_new_post_page.dart';
+import 'login_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -33,9 +35,7 @@ class HomePage extends StatelessWidget {
           ),
           actions: [
             GestureDetector(
-              onTap: () {
-                /// TODO : - Handle Search Here
-              },
+              onTap: () {},
               child: Container(
                 margin: const EdgeInsets.only(
                   right: MARGIN_LARGE,
@@ -46,7 +46,40 @@ class HomePage extends StatelessWidget {
                   size: MARGIN_LARGE,
                 ),
               ),
-            )
+            ),
+            Consumer<NewsFeedBloc>(
+              builder: (context, bloc, child) => GestureDetector(
+                onTap: () {
+                  bloc.onTapLogout().then(
+                          (_) => navigateToScreen(context, const LoginPage()));
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    right: MARGIN_LARGE,
+                  ),
+                  child: const Icon(
+                    Icons.logout,
+                    color: Colors.red,
+                    size: MARGIN_LARGE,
+                  ),
+                ),
+              ),
+            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     /// TODO : - Handle Search Here
+            //   },
+            //   child: Container(
+            //     margin: const EdgeInsets.only(
+            //       right: MARGIN_LARGE,
+            //     ),
+            //     child: const Icon(
+            //       Icons.search,
+            //       color: Colors.grey,
+            //       size: MARGIN_LARGE,
+            //     ),
+            //   ),
+            // )
           ],
         ),
         body: Container(

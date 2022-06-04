@@ -7,6 +7,9 @@ import 'package:social_media_app/network/firestore_database_data_agent_impl.dart
 import 'package:social_media_app/network/real_time_database_data_agent_impl.dart';
 import 'package:social_media_app/network/social_data_agent.dart';
 
+import 'authentication_model.dart';
+import 'authentication_model_impl.dart';
+
 class SocialModelImpl extends SocialModel {
   static final SocialModelImpl _singleton = SocialModelImpl._internal();
 
@@ -21,6 +24,9 @@ class SocialModelImpl extends SocialModel {
 
   /// fire store database
   SocialDataAgent dataAgent = FireStoreDatabaseDataAgentImpl();
+
+  final AuthenticationModel _authenticationModel = AuthenticationModelImpl();
+
   @override
   Stream<List<NewsFeedVO>> getNewsFeed() {
     return dataAgent.getNewsFeed();
@@ -44,7 +50,7 @@ class SocialModelImpl extends SocialModel {
     var currentMilliseconds = DateTime.now().millisecondsSinceEpoch;
     var newPost = NewsFeedVO(
       id: currentMilliseconds,
-      userName: "Su Hla Hla Phyu",
+      userName: _authenticationModel.getLoggedInUser().userName,
       postImage: imageUrl,
       description: description,
       profilePicture:

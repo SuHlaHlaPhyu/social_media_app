@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/data/models/social_model_impl.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
 
+import '../data/models/authentication_model.dart';
+import '../data/models/authentication_model_impl.dart';
 import '../data/models/social_model.dart';
+import '../data/vos/user_vo.dart';
 
 class AddNewPostBloc extends ChangeNotifier {
   String newPostDescription = "";
@@ -12,6 +15,7 @@ class AddNewPostBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isLoading = false;
   bool isRemove = false;
+  UserVO? _loggedInUser;
 
   /// Edit post
   bool isEditMode = false;
@@ -24,7 +28,10 @@ class AddNewPostBloc extends ChangeNotifier {
 
   final SocialModel _model = SocialModelImpl();
 
+  final AuthenticationModel authModel = AuthenticationModelImpl();
+
   AddNewPostBloc({int? newsFeedId}) {
+    _loggedInUser = authModel.getLoggedInUser();
     if (newsFeedId != null) {
       isEditMode = true;
       isRemove = true;
@@ -35,7 +42,7 @@ class AddNewPostBloc extends ChangeNotifier {
   }
 
   void prepareDataForNewPostMode() {
-    userName = "Su Hla Hla Phyu";
+    userName = _loggedInUser?.userName ?? "";
     profilePicture =
         "https://bestprofilepictures.com/wp-content/uploads/2021/08/Anime-Girl-Profile-Picture.jpg";
     _notifySafely();

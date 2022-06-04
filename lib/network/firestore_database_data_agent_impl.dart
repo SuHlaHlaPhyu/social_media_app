@@ -1,17 +1,23 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
+import 'package:social_media_app/data/vos/user_vo.dart';
 import 'package:social_media_app/network/social_data_agent.dart';
 
 const newsFeedCollection = "newsfeed";
+const usersCollection = "users";
 const fileUploadRef = "uploads";
 
 class FireStoreDatabaseDataAgentImpl extends SocialDataAgent {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   var firebaseStorage = FirebaseStorage.instance;
+
+  /// Auth
+  FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Future<void> addNewPost(NewsFeedVO post) {
     return fireStore
@@ -64,5 +70,49 @@ class FireStoreDatabaseDataAgentImpl extends SocialDataAgent {
         .child("${DateTime.now().millisecondsSinceEpoch}")
         .putFile(image)
         .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
+  }
+
+  @override
+  Future registerNewUser(UserVO newUser) {
+    return auth
+        .createUserWithEmailAndPassword(
+        email: newUser.email ?? "", password: newUser.password ?? "")
+        .then((credential) =>
+    credential.user?..updateDisplayName(newUser.userName))
+        .then((user) {
+      newUser.id = user?.uid ?? "";
+      _addNewUser(newUser);
+    });
+  }
+
+  Future<void> _addNewUser(UserVO newUser) {
+    return fireStore
+        .collection(usersCollection)
+        .doc(newUser.id.toString())
+        .set(newUser.toJson());
+  }
+
+  @override
+  Future login(String email, String password) {
+    return auth.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  @override
+  bool isLoggedIn() {
+    return auth.currentUser != null;
+  }
+
+  @override
+  UserVO getLoggedInUser() {
+    return UserVO(
+      id: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      userName: auth.currentUser?.displayName,
+    );
+  }
+
+  @override
+  Future logOut() {
+    return auth.signOut();
   }
 }

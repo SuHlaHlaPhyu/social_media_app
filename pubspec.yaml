@@ -36,11 +36,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^2.1.0
   firebase_core: ^1.8.0
-  firebase_messaging: ^11.1.0
+  firebase_messaging: ^11.4.1
   flutter_local_notifications: ^9.5.3+1
   firebase_database: ^8.0.1
   cloud_firestore: ^3.1.17
   firebase_storage: ^10.1.0
+  firebase_auth: ^3.3.19
   image_picker: ^0.8.5+3
   loading_indicator:
 
