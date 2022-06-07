@@ -42,12 +42,16 @@ dependencies:
   cloud_firestore: ^3.1.17
   firebase_storage: ^10.1.0
   firebase_auth: ^3.3.19
+  firebase_analytics: ^8.3.4
+  firebase_crashlytics: ^2.8.1
+  firebase_performance: ^0.7.1+4
   image_picker: ^0.8.5+3
   loading_indicator:
 
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0
   provider: ^6.0.3
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:

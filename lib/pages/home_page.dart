@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/blocs/news_feed_bloc.dart';
@@ -118,6 +119,7 @@ class HomePage extends StatelessWidget {
           backgroundColor: Colors.black,
           onPressed: () {
             _navigateToAddNewPostPage(context);
+            // FirebaseCrashlytics.instance.crash();
           },
           child: const Icon(
             Icons.add,

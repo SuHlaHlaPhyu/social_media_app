@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:social_media_app/data/models/social_model_impl.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
+import 'package:social_media_app/analytics/firebase_analytics_tracker.dart';
 
 import '../data/models/authentication_model.dart';
 import '../data/models/authentication_model_impl.dart';
@@ -39,6 +40,9 @@ class AddNewPostBloc extends ChangeNotifier {
     } else {
       prepareDataForNewPostMode();
     }
+
+    /// Firebase
+    _sendAnalyticsData(addNewPostScreenReached, null);
   }
 
   void prepareDataForNewPostMode() {
@@ -87,12 +91,15 @@ class AddNewPostBloc extends ChangeNotifier {
         return editNewsFeedPost().then((value) {
           isLoading = false;
           _notifySafely();
+          _sendAnalyticsData(
+              editPostAction, {postId: newsFeed?.id.toString() ?? ""});
         });
       } else {
         return createNewNewsFeedPost().then((value) {
           print("=====> post");
           isLoading = false;
           _notifySafely();
+          _sendAnalyticsData(addNewPostAction, null);
         });
       }
     }
@@ -109,6 +116,11 @@ class AddNewPostBloc extends ChangeNotifier {
 
   Future<void> createNewNewsFeedPost() {
     return _model.addNewPost(newPostDescription, chosenImageFile);
+  }
+
+  /// Analytics
+  void _sendAnalyticsData(String name, Map<String, String>? parameters) async {
+    await FirebaseAnalyticsTracker().logEvent(name, parameters);
   }
 
   void _notifySafely() {

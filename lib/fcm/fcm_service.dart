@@ -1,5 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 const localNotificationChannel = "high_importance_channel";
@@ -29,11 +29,11 @@ class FCMService {
 
   /// Flutter Notification Plugin
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   /// Android Initialization Settings
   AndroidInitializationSettings initializationSettingsAndroid =
-  const AndroidInitializationSettings('ic_launcher');
+      const AndroidInitializationSettings('ic_launcher');
 
   void listenForMessages() async {
     await requestNotificationPermissionForIOS();
@@ -71,7 +71,7 @@ class FCMService {
 
     FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
       debugPrint(
-          "User pressed the notification ${remoteMessage.data['post_id']}");
+          "User pressed the notification ${remoteMessage.data.toString()}");
     });
 
     messaging.getInitialMessage().then((remoteMessage) {
@@ -104,21 +104,22 @@ class FCMService {
 
   Future initFlutterLocalNotification() {
     final InitializationSettings initializationSettings =
-    InitializationSettings(
+        InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: null,
       macOS: null,
     );
     return flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (payload) {
-          debugPrint("Local Notification Clicked =====> $payload");
-        });
+      debugPrint("Local Notification Clicked =====> $payload");
+    });
   }
 
   Future? registerChannel() {
     return flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
+
 }

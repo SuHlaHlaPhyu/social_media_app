@@ -20,10 +20,10 @@ class SocialModelImpl extends SocialModel {
   }
 
   /// real time database
-  //SocialDataAgent dataAgent = RealTimeDatabaseDataAgentImpl();
+  SocialDataAgent dataAgent = RealTimeDatabaseDataAgentImpl();
 
   /// fire store database
-  SocialDataAgent dataAgent = FireStoreDatabaseDataAgentImpl();
+  //SocialDataAgent dataAgent = FireStoreDatabaseDataAgentImpl();
 
   final AuthenticationModel _authenticationModel = AuthenticationModelImpl();
 
