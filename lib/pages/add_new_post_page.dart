@@ -5,7 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/blocs/add_new_post_bloc.dart';
 import 'package:social_media_app/resources/dimens.dart';
+import 'package:social_media_app/resources/strings.dart';
 import 'package:social_media_app/widgets/loading_view.dart';
+import 'package:social_media_app/widgets/primary_button_view.dart';
 import 'package:social_media_app/widgets/profile_image_view.dart';
 
 class AddNewPostPage extends StatelessWidget {
@@ -207,23 +209,9 @@ class PostButtonView extends StatelessWidget {
             Navigator.pop(context);
           });
         },
-        child: Container(
-          width: double.infinity,
-          height: MARGIN_XXLARGE,
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(MARGIN_LARGE),
-          ),
-          child: const Center(
-            child: Text(
-              "POST",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: TEXT_REGULAR_2X,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+        child: PrimaryButtonView(
+          label: LBL_POST,
+          themeColor: bloc.themeColor,
         ),
       ),
     );

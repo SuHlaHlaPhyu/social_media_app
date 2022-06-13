@@ -8,6 +8,7 @@ import 'package:social_media_app/viewitems/news_feed_item_view.dart';
 
 import 'add_new_post_page.dart';
 import 'login_page.dart';
+import 'text_detection_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,6 +36,25 @@ class HomePage extends StatelessWidget {
             ),
           ),
           actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const TextDetectionPage(),
+                  ),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.only(
+                  right: MARGIN_LARGE,
+                ),
+                child: const Icon(
+                  Icons.face,
+                  color: Colors.grey,
+                  size: MARGIN_LARGE,
+                ),
+              ),
+            ),
             GestureDetector(
               onTap: () {},
               child: Container(

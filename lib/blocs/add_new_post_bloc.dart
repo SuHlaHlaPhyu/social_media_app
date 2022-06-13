@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media_app/data/models/social_model_impl.dart';
 import 'package:social_media_app/data/vos/news_feed_vo.dart';
 import 'package:social_media_app/analytics/firebase_analytics_tracker.dart';
+import 'package:social_media_app/remote_config/firebase_remote_config.dart';
 
 import '../data/models/authentication_model.dart';
 import '../data/models/authentication_model_impl.dart';
@@ -22,14 +23,18 @@ class AddNewPostBloc extends ChangeNotifier {
   bool isEditMode = false;
   String userName = "";
   String profilePicture = "";
-  String postedImage  ="";
+  String postedImage = "";
   NewsFeedVO? newsFeed;
 
   File? chosenImageFile;
 
+  Color themeColor = Colors.black;
+
   final SocialModel _model = SocialModelImpl();
 
   final AuthenticationModel authModel = AuthenticationModelImpl();
+  /// Remote Configs
+  final FirebaseRemoteConfig _firebaseRemoteConfig = FirebaseRemoteConfig();
 
   AddNewPostBloc({int? newsFeedId}) {
     _loggedInUser = authModel.getLoggedInUser();
@@ -43,6 +48,11 @@ class AddNewPostBloc extends ChangeNotifier {
 
     /// Firebase
     _sendAnalyticsData(addNewPostScreenReached, null);
+    _getRemoteConfigAndChangeTheme();
+  }
+  void _getRemoteConfigAndChangeTheme() {
+    themeColor = _firebaseRemoteConfig.getThemeColorFromRemoteConfig();
+    _notifySafely();
   }
 
   void prepareDataForNewPostMode() {
@@ -57,7 +67,7 @@ class AddNewPostBloc extends ChangeNotifier {
       userName = newsFeedItem.userName ?? "";
       profilePicture = newsFeedItem.profilePicture ?? "";
       newPostDescription = newsFeedItem.description ?? "";
-        postedImage = newsFeedItem.postImage ?? "";
+      postedImage = newsFeedItem.postImage ?? "";
       newsFeed = newsFeedItem;
       _notifySafely();
     });
